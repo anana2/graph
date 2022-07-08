@@ -4,7 +4,6 @@ import fxf.anana2.igraph.ModifiableVSet;
 import fxf.anana2.igraph.VSet;
 import it.unimi.dsi.fastutil.ints.IntIterator;
 import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
-import it.unimi.dsi.fastutil.ints.IntSet;
 
 public class OpenHashVSet implements ModifiableVSet {
     private final IntOpenHashSet delegate;
