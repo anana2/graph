@@ -1,5 +1,7 @@
-package fxf.anana2.igraph;
+package fxf.anana2.igraph.impl;
 
+import fxf.anana2.igraph.ModifiableVSet;
+import fxf.anana2.igraph.VSet;
 import it.unimi.dsi.fastutil.ints.IntIterator;
 import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 import it.unimi.dsi.fastutil.ints.IntSet;
