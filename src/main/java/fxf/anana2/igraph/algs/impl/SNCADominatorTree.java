@@ -4,8 +4,6 @@ import fxf.anana2.igraph.ContiguousGraph;
 import fxf.anana2.igraph.FlowGraph;
 import fxf.anana2.igraph.ParentTree;
 import fxf.anana2.igraph.ReverseFlowGraph;
-import it.unimi.dsi.fastutil.booleans.BooleanArrayList;
-import it.unimi.dsi.fastutil.booleans.BooleanList;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntStack;
 
@@ -96,9 +94,9 @@ public class SNCADominatorTree<G extends FlowGraph & ReverseFlowGraph> implement
         IntStack stack = new IntArrayList();
         stack.push(root());
 
-        BooleanList seen = BooleanArrayList.wrap(new boolean[size()]); // default initialized to all
+        boolean[] seen = new boolean[size()]; // default initialized to all
                                                                        // false;
-        seen.set(root(), true);
+        seen[root()] = true;
 
         while (!stack.isEmpty()) {
             int v = stack.popInt(); // pop node to be visited
@@ -108,14 +106,14 @@ public class SNCADominatorTree<G extends FlowGraph & ReverseFlowGraph> implement
             while (succs.hasNext()) {
                 int w = succs.nextInt();
 
-                if (seen.getBoolean(w)) {
+                if (seen[w]) {
                     continue;
                 }
 
                 ancestor[w] = v;
 
                 // mark as seen here to avoid pushing the parent
-                seen.set(v, true);
+                seen[w] = true;
                 stack.push(w);
             }
         }

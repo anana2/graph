@@ -5,7 +5,6 @@ import fxf.anana2.igraph.VSet;
 import it.unimi.dsi.fastutil.ints.IntIterator;
 import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 import it.unimi.dsi.fastutil.ints.IntSet;
-import it.unimi.dsi.fastutil.ints.IntSets;
 
 public class OpenHashVSet implements ModifiableVSet {
     private final IntOpenHashSet delegate;
@@ -30,6 +29,10 @@ public class OpenHashVSet implements ModifiableVSet {
         return out;
     }
 
+    public OpenHashVSet(int... vs) {
+        delegate = new IntOpenHashSet(vs);
+    }
+
     private OpenHashVSet(IntOpenHashSet vs) {
         delegate = vs;
     }
@@ -38,8 +41,17 @@ public class OpenHashVSet implements ModifiableVSet {
         delegate = new IntOpenHashSet(size);
     }
 
+    public OpenHashVSet(OpenHashVSet vs) {
+        delegate = new IntOpenHashSet(vs.delegate);
+    }
+
     public OpenHashVSet(VSet vs) {
-        delegate = new IntOpenHashSet(vs.asIntSet());
+        delegate = new IntOpenHashSet(vs.size());
+        
+        var iter = vs.iterator();
+        while (iter.hasNext()) {
+            delegate.add(iter.nextInt());
+        }
     }
 
     public OpenHashVSet() {
@@ -68,7 +80,18 @@ public class OpenHashVSet implements ModifiableVSet {
 
     @Override
     public boolean add(VSet vs) {
-        return delegate.addAll(vs.asIntSet());
+        if (vs instanceof OpenHashVSet) {
+            return delegate.addAll(((OpenHashVSet) vs).delegate);
+        } else {
+            var iter = vs.iterator();
+            boolean changed = false;
+            while (iter.hasNext()) {
+                if (delegate.add(iter.nextInt())) {
+                    changed = true;
+                }
+            }
+            return changed;
+        }
     }
 
     @Override
@@ -78,26 +101,40 @@ public class OpenHashVSet implements ModifiableVSet {
 
     @Override
     public boolean remove(VSet vs) {
-        return delegate.addAll(vs.asIntSet());
+        if (vs instanceof OpenHashVSet) {
+            return delegate.removeAll(((OpenHashVSet) vs).delegate);
+        } else {
+            var iter = vs.iterator();
+            boolean changed = false;
+            while (iter.hasNext()) {
+                if (delegate.remove(iter.nextInt())) {
+                    changed = true;
+                }
+            }
+            return changed;
+        }
     }
 
     @Override
     public boolean retain(VSet vs) {
-        return delegate.retainAll(vs.asIntSet());
+        if (vs instanceof OpenHashVSet) {
+            return delegate.retainAll(((OpenHashVSet) vs).delegate);
+        } else {
+            var iter = iterator();
+            boolean changed = false;
+            while (iter.hasNext()) {
+                int v = iter.nextInt();
+                if (!vs.contains(v)) {
+                    remove(v);
+                    changed = true;
+                }
+            }
+            return changed;
+        }
     }
 
     @Override
     public void clear() {
         delegate.clear();
-    }
-
-    @Override
-    public IntSet asIntSet() {
-        return IntSets.unmodifiable(asModifiableIntSet());
-    }
-
-    @Override
-    public IntSet asModifiableIntSet() {
-        return delegate;
     }
 }

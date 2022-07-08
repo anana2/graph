@@ -7,6 +7,4 @@ public interface VSet extends IntIterable {
     int size();
 
     boolean contains(int v);
-
-    IntSet asIntSet();
 }

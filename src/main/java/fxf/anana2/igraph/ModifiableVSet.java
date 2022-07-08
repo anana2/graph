@@ -14,6 +14,4 @@ public interface ModifiableVSet extends VSet {
     boolean retain(VSet vs);
 
     void clear();
-
-    IntSet asModifiableIntSet();
 }
