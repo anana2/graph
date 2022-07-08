@@ -1,4 +1,4 @@
-package fxf.anana2.igraph.algs.impl;
+package fxf.anana2.igraph.algo.impl;
 
 import fxf.anana2.igraph.ContiguousGraph;
 import fxf.anana2.igraph.FlowGraph;

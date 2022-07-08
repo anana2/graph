@@ -1,4 +1,4 @@
-package fxf.anana2.igraph.algs;
+package fxf.anana2.igraph.algo;
 
 import fxf.anana2.igraph.ParentTree;
 
