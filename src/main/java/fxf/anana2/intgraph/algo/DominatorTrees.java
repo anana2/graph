@@ -1,7 +1,7 @@
-package fxf.anana2.igraph.algo;
+package fxf.anana2.intgraph.algo;
 
-import fxf.anana2.igraph.FlowGraph;
-import fxf.anana2.igraph.ParentTree;
+import fxf.anana2.intgraph.FlowGraph;
+import fxf.anana2.intgraph.ParentTree;
 
 public interface DominatorTrees extends ParentTree {
     public static ParentTree snca(FlowGraph graph) {

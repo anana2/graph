@@ -1,4 +1,4 @@
-package fxf.anana2.igraph;
+package fxf.anana2.intgraph;
 
 public interface ModifiableFlowGraph extends FlowGraph, ModifiableGraph {
     int source(int s);

@@ -1,9 +1,10 @@
-package fxf.anana2.igraph.algo;
+package fxf.anana2.intgraph.algo;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.Test;
-import fxf.anana2.igraph.FlowGraph;
+
+import fxf.anana2.intgraph.FlowGraph;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.ints.IntSet;
@@ -119,7 +120,7 @@ public class TestSNCADominatorTree {
         map.put(12, IntSet.of(13));
         map.put(13, IntSet.of(1));
         var snca = assertDoesNotThrow(() -> {
-            return DominatorTrees.snca(new MapFlowGraph(2, map));
+            return SNCADominatorTree.from(new MapFlowGraph(2, map));
         });
         assertEquals("[(1,13),(2,-1),(3,2),(4,3),(5,4),(6,5),(7,6),(8,6),(9,8),(10,9),(11,7),(12,11),(13,12)]",
                 snca.toString());

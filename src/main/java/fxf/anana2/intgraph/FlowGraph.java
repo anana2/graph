@@ -1,4 +1,4 @@
-package fxf.anana2.igraph;
+package fxf.anana2.intgraph;
 
 public interface FlowGraph extends Graph {
     int source();

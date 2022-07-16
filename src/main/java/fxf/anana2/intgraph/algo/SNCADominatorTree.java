@@ -1,8 +1,9 @@
-package fxf.anana2.igraph.algo;
+package fxf.anana2.intgraph.algo;
 
 import java.util.stream.Collectors;
-import fxf.anana2.igraph.FlowGraph;
-import fxf.anana2.igraph.ParentTree;
+
+import fxf.anana2.intgraph.FlowGraph;
+import fxf.anana2.intgraph.ParentTree;
 import it.unimi.dsi.fastutil.ints.Int2IntMap;
 import it.unimi.dsi.fastutil.ints.Int2IntOpenHashMap;
 import it.unimi.dsi.fastutil.ints.IntArrayList;

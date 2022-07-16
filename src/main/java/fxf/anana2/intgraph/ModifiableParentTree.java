@@ -1,4 +1,4 @@
-package fxf.anana2.igraph;
+package fxf.anana2.intgraph;
 
 public interface ModifiableParentTree extends ParentTree {
     int root(int r);
