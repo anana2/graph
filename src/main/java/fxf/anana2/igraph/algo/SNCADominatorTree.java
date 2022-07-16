@@ -46,7 +46,7 @@ class SNCADominatorTree implements ParentTree {
 
     @Override
     public int root() {
-        return graph.source();
+        return vertex.get(0);
     }
 
     @Override
