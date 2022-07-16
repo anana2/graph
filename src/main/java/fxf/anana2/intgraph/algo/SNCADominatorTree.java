@@ -7,6 +7,7 @@ import fxf.anana2.intgraph.ParentTree;
 import it.unimi.dsi.fastutil.ints.Int2IntMap;
 import it.unimi.dsi.fastutil.ints.Int2IntOpenHashMap;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
+import it.unimi.dsi.fastutil.ints.IntArrays;
 import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 import it.unimi.dsi.fastutil.ints.IntSet;
 import it.unimi.dsi.fastutil.ints.IntStack;
@@ -131,7 +132,9 @@ class SNCADominatorTree implements ParentTree {
              
 
             // for each successors w of v in G
-            for (int w : graph.succ(v)) {
+            var succ = graph.succ(v);
+            IntArrays.radixSort(succ);
+            for (int w : succ) {
                 stack.push(w);
                 stack.push(probe);
             }
