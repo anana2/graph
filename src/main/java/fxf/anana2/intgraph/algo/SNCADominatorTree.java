@@ -7,7 +7,6 @@ import fxf.anana2.intgraph.ParentTree;
 import it.unimi.dsi.fastutil.ints.Int2IntMap;
 import it.unimi.dsi.fastutil.ints.Int2IntOpenHashMap;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
-import it.unimi.dsi.fastutil.ints.IntArrays;
 import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 import it.unimi.dsi.fastutil.ints.IntSet;
 import it.unimi.dsi.fastutil.ints.IntStack;
@@ -23,7 +22,9 @@ class SNCADominatorTree implements ParentTree {
     private IntSet[] pred;
 
     public static SNCADominatorTree from(FlowGraph graph) {
-        return new SNCADominatorTree(graph).run();
+        var tree = new SNCADominatorTree(graph);
+        tree.build();
+        return tree;
     }
 
     SNCADominatorTree(FlowGraph graph) {
@@ -56,7 +57,7 @@ class SNCADominatorTree implements ParentTree {
         return vertex.get(idom[preorder.get(v)]);
     }
 
-    private SNCADominatorTree run() {
+    private final void build() {
         // initialize buffers
         for (int v = 0; v < size(); v++) {
             ancestor[v] = -1;
@@ -78,14 +79,13 @@ class SNCADominatorTree implements ParentTree {
                     continue;
                 }
 
-                if (v > w) {
-                    rcompress(v);
-                    v = label[v];
-                }
+                compress(v, w);
 
+                // u = lca(v, w)
+                int u = label[v];
 
-                if (semi[v] < semi[w]) {
-                    semi[w] = semi[v];
+                if (semi[u] < semi[w]) {
+                    semi[w] = semi[u];
                 }
             }
 
@@ -103,11 +103,9 @@ class SNCADominatorTree implements ParentTree {
                 idom[v] = idom[idom[v]];
             }
         }
-
-        return this;
     }
 
-    void dfs() {
+    private final void dfs() {
         int probe = -1;
 
         IntStack stack = new IntArrayList();
@@ -125,16 +123,16 @@ class SNCADominatorTree implements ParentTree {
 
             probe++;
 
+            // set indices
             vertex.put(probe, v);
             preorder.put(v, probe);
+
+            // set predecessors
             ancestor[probe] = u;
             pred[probe].add(u);
-             
 
             // for each successors w of v in G
-            var succ = graph.succ(v);
-            IntArrays.radixSort(succ);
-            for (int w : succ) {
+            for (int w : graph.succ(v)) {
                 stack.push(w);
                 stack.push(probe);
             }
@@ -142,29 +140,36 @@ class SNCADominatorTree implements ParentTree {
         }
     }
 
-    void rcompress(int v) {
-        int u = ancestor[v];
-        if (u < 0 || ancestor[u] < 0) {
-            return;
-        }
-
-        rcompress(u);
-
-        if (label[u] < label[v]) {
-            label[v] = label[u];
-        }
-        ancestor[v] = ancestor[u];
-    }
-
-    void compress(int v) {
+    /**
+     * compression to find lca of v and w;
+     * the recursive definition is:
+     * <pre>
+     * void compress_rec(int v, int w) {
+     *     int u = ancestor[v];
+     *     if (u <= w) {
+     *         return;
+     *     }
+     *     compress_rec(u, w);
+     *     if (label[u] < label[v]) {
+     *     if (label[u] < label[v]) {
+     *         label[v] = label[u];
+     *     }
+     *     ancestor[v] = ancestor[u];
+     * }
+     * </pre>
+     * @param v
+     * @param w
+     */
+    private final void compress(int v, int w) {
         IntStack stack = new IntArrayList();
 
         do {
             stack.push(v);
             v = ancestor[v];
-        } while (v >= 0 && ancestor[v] >= 0);
+        } while (v > w);
 
         v = stack.popInt();
+
         while (!stack.isEmpty()) {
             int u = v;
             v = stack.popInt();
@@ -172,14 +177,14 @@ class SNCADominatorTree implements ParentTree {
                 label[v] = label[u];
             }
             ancestor[v] = ancestor[u];
-        } ;
+        }
     }
 
     @Override
     public String toString() {
         return preorder.keySet().intStream()
-            .sorted()
-            .mapToObj(i -> String.format("(%d,%d)", i, parent(i)))
-            .collect(Collectors.joining(",", "[", "]"));
+                .sorted()
+                .mapToObj(i -> String.format("(%d,%d)", i, parent(i)))
+                .collect(Collectors.joining(",", "[", "]"));
     }
 }
